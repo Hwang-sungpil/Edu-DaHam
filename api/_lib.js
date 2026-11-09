@@ -1,0 +1,11 @@
+const VERSION='2022-06-28';
+function config(){return !!(process.env.NOTION_TOKEN&&process.env.NOTION_DATABASE_ID&&process.env.ADMIN_ACCESS_TOKEN)}
+async function notion(path,method='GET',body){let r=await fetch('https://api.notion.com/v1/'+path,{method,headers:{Authorization:'Bearer '+process.env.NOTION_TOKEN,'Notion-Version':VERSION,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});let d=await r.json();if(!r.ok)throw Error('Notion '+r.status+': '+(d.message||'요청 실패'));return d}
+function token(req){return String(req.headers['x-access-token']||'')}
+function role(req,data){let k=token(req);if(!k)return null;if(k===process.env.ADMIN_ACCESS_TOKEN)return {role:'admin'};let e=data.employees.find(e=>e.token&&e.token===k);return e?{role:'employee',employeeId:e.id}:null}
+function valid(data){return data&&Array.isArray(data.employees)&&Array.isArray(data.trainings)&&Array.isArray(data.assignments)}
+async function load(){let db=process.env.NOTION_DATABASE_ID;let r=await notion('databases/'+db+'/query','POST',{page_size:100});let page=r.results.find(x=>x.properties?.Name?.title?.some(t=>t.plain_text==='EDUCATION_ON_STATE'));if(!page)return {page:null,data:{employees:[],trainings:[],assignments:[]}};let parts=page.properties?.Payload?.rich_text||[];let s=parts.map(x=>x.plain_text||x.text?.content||'').join('');let data=s?JSON.parse(s):{employees:[],trainings:[],assignments:[]};if(!valid(data))throw Error('Notion 데이터 형식 오류');return {page:page.id,data}}
+async function store(data,page){if(!valid(data))throw Error('저장 형식 오류');let s=JSON.stringify(data);let parts=s.match(/[\s\S]{1,1800}/g)||[''];if(parts.length>95)throw Error('Notion 저장 한도를 초과했습니다. 데이터 분할 DB로 전환해야 합니다.');let properties={Name:{title:[{text:{content:'EDUCATION_ON_STATE'}}]},Payload:{rich_text:parts.map(x=>({text:{content:x}}))}};if(page)return notion('pages/'+page,'PATCH',{properties});return notion('pages','POST',{parent:{database_id:process.env.NOTION_DATABASE_ID},properties})}
+function respond(res,code,obj){res.status(code).setHeader('Cache-Control','no-store').json(obj)}
+function error(res,e){respond(res,500,{error:e.message||'서버 오류'})}
+module.exports={config,load,store,role,respond,error};
