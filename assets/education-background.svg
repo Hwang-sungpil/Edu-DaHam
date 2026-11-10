@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
-<rect width="1600" height="900" fill="#f5f9ff"/><path d="M0 190Q420 -50 820 155T1600 75V0H0Z" fill="#e6f0ff" opacity=".65"/>
-<g opacity=".25" transform="translate(1080 70)"><rect width="450" height="640" rx="28" fill="#d5e5f9"/>
-<g stroke="#91b5e1" stroke-width="11"><path d="M35 180H420M35 350H420M35 520H420"/></g>
-<g fill="#79a7db"><rect x="50" y="45" width="35" height="123" rx="5"/><rect x="100" y="70" width="45" height="98" rx="5"/><rect x="165" y="40" width="30" height="128" rx="5"/><rect x="235" y="60" width="45" height="108" rx="5"/><rect x="310" y="40" width="38" height="128" rx="5"/><rect x="365" y="72" width="34" height="96" rx="5"/><rect x="50" y="210" width="45" height="125" rx="5"/><rect x="120" y="225" width="30" height="110" rx="5"/><rect x="180" y="207" width="45" height="128" rx="5"/><rect x="260" y="220" width="30" height="115" rx="5"/><rect x="325" y="210" width="50" height="125" rx="5"/></g></g>
-<g opacity=".18" transform="translate(70 600)"><path d="M0 95Q125 10 250 95V240Q125 160 0 240zM250 95Q375 10 500 95V240Q375 160 250 240z" fill="#83aee2"/><path d="M250 100v140" stroke="#568ccf" stroke-width="9"/></g>
-<circle cx="900" cy="730" r="280" fill="#e5effd" opacity=".6"/>
-</svg>
