@@ -1,0 +1,455 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>교육ON v17</title><style>
+*{box-sizing:border-box}body{font-family:'Malgun Gothic',Arial,sans-serif;margin:0;background:#f5f7fa;color:#172a3c;font-size:15px}header{display:flex;align-items:center;gap:12px;padding:12px 18px;background:#102c3a;color:white}header h1{font-size:22px;margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer;border:1px solid #aebfc8;background:white;border-radius:5px;padding:7px 10px;color:#193344}button.primary{background:#166c68;color:white;border-color:#166c68}button.danger{color:#9b2424}button:hover{filter:brightness(.96)}main{padding:12px 14px}.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.grow{flex:1}.stat{background:white;border:1px solid #ccd5dc;border-radius:6px;padding:10px 16px;min-width:140px}.stat strong{font-size:21px}.muted{color:#657582;font-size:13px}.tablewrap{overflow:auto;background:white;border:1px solid #9baeb7;max-height:calc(100vh - 205px)}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #b9c7cf;padding:8px;vertical-align:middle}th{background:#e5edef;text-align:left;position:sticky;top:0;z-index:2}td:first-child{min-width:270px}.months th{text-align:center;min-width:64px}.months td{text-align:center;padding:7px 3px;min-width:64px}.planned{color:#929ca4}.active{font-weight:bold;color:#102c3a}.done{color:#176b55}.pill{border-radius:4px;padding:3px 6px;font-size:12px;display:inline-block}.pill.grey{background:#e5e8ea;color:#6b747c}.pill.blue{background:#dcefed;color:#125d5a}.pill.orange{background:#fff1d4;color:#8b5505}.timeline{height:13px;border-radius:3px;background:#cbd8de}.timeline.active{background:#208b81}.timeline.done{background:#68a589}.side{display:none;position:fixed;inset:0;background:#14252d88;z-index:20;align-items:center;justify-content:center}.side.open{display:flex}.modal{width:min(1040px,97vw);max-height:95vh;overflow:auto;background:white;padding:18px;border-radius:9px;box-shadow:0 12px 36px #0004}.modal h2{margin:0 0 10px}.modal{position:relative}.modalhead{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #b8c6ce;padding-bottom:9px;margin-bottom:10px}.modalhead h2{margin:0}.closex{font-size:25px;line-height:1;padding:2px 10px;border:0;background:transparent}.editor-layout{display:grid;grid-template-columns:55% 45%;gap:12px}.preview-pane{min-width:0}.preview-pane iframe{width:100%;height:min(68vh,740px);border:1px solid #9caeb9;background:#f5f5f5}.editor-layout .fields{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:850px){.editor-layout{grid-template-columns:1fr}.preview-pane iframe{height:380px}}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.fields label{display:block;font-weight:bold;font-size:14px}.fields input,.fields select,.fields textarea{display:block;width:100%;padding:8px;margin-top:5px;border:1px solid #b4c4cf;border-radius:4px}.wide{grid-column:1/-1}.foot{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.docbox{border:2px dashed #90b3b3;padding:14px;text-align:center;background:#f1f8f7}.doclist{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.docitem{border:1px solid #cad7dc;padding:5px;border-radius:5px}.note{background:#f2f6f8;padding:8px;border-left:3px solid #759da4;margin:8px 0}.small{font-size:12px}a{color:#126b78}.hide{display:none}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:750px){.fields,.grid2{grid-template-columns:1fr}header{flex-wrap:wrap}.modal{padding:12px}}
+
+/* v10 visual system */
+:root{--navy:#192b50;--blue:#315dc1;--sky:#eaf2ff;--violet:#7653c4;--amber:#c17a12;--mint:#147f7b;--red:#b74656}
+body{background:#f1f4fb;color:#23304a}header{background:linear-gradient(100deg,#182b51,#354e88 65%,#5e4c92)}
+button.primary{background:#315dc1;border-color:#315dc1}button:hover{background:#eaf2ff}button.primary:hover{background:#244ca5}
+.stat{border-top:4px solid #315dc1;box-shadow:0 3px 14px #182c5710}.stat:nth-child(2){border-top-color:#7653c4}.stat:nth-child(3){border-top-color:#158879}.stat:nth-child(4){border-top-color:#e3a13d}
+th{background:#e9effa;color:#273e70;border-color:#aabbd9}.months td{border-color:#b8c8e0}.months td:nth-child(even){background:#fafbff}.months td:nth-child(3n){border-right:2px solid #8299c5}.pill.blue{background:#e3f6ed;color:#126c4d}.pill.orange{background:#fff0d7;color:#935b06}.timeline.active{background:#5876d6}.timeline.done{background:#29a388}.docbox{border-color:#7d9bd3;background:#f1f5ff}.note{background:#f0f3fa;border-left-color:#7c67c8}.fields input:focus,.fields select:focus,.fields textarea:focus{outline:2px solid #a4b8f0;border-color:#5076d3}
+/* Fixed header/footer, content fits viewport without modal scrollbar */
+.side{padding:8px}.modal{width:min(1280px,99vw);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);padding:12px 15px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.modalhead{flex:0 0 auto;margin-bottom:7px;padding-bottom:6px}.modalhead h2{font-size:20px}
+#modalBody{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.modal .foot{flex:0 0 auto;margin-top:6px;padding-top:7px;border-top:1px solid #d6dfed;background:#fff}
+.editor-layout{flex:1;min-height:0;grid-template-columns:minmax(0,55%) minmax(0,45%);gap:10px}
+.preview-pane{display:flex;flex-direction:column;min-height:0;overflow:hidden}.docbox{padding:8px;flex:0 0 auto}.doclist{flex:0 0 auto;max-height:46px;overflow:auto}.preview-pane #docPreview{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}.preview-pane iframe{height:100%;flex:1;min-height:0}.preview-pane img{max-height:100%!important}.preview-pane #extractStatus{margin:3px 0;max-height:26px;overflow:hidden}
+.editor-layout .fields{min-height:0;overflow-y:auto;align-content:start;gap:5px 9px;padding-right:3px}.fields label{font-size:13px}.fields input,.fields select,.fields textarea{padding:5px 7px;margin-top:3px;font-size:14px}.fields textarea{resize:vertical;min-height:44px}.fields textarea[rows="4"]{height:65px}.fields textarea[rows="3"]{height:52px}
+#modalBody>.note:last-child{flex:0 0 auto;padding:4px 7px;margin:4px 0 0;font-size:11px}
+.completion{grid-column:1/-1;background:#f0f5ff;border:1px solid #c3d3f5;border-radius:7px;padding:9px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.completion h3{grid-column:1/-1;margin:0;color:#3156a2;font-size:14px}.completion .wide{grid-column:1/-1}
+@media(max-width:850px){.editor-layout{grid-template-columns:1fr 1fr}.modal{width:99vw}.fields{grid-template-columns:1fr 1fr!important}}
+
+/* v11: navigation, legibility and compact settings */
+body{background:#edf2fa;color:#1c2b46;font-size:16px}header{background:linear-gradient(110deg,#172e5a,#354b86);padding:10px 16px}header button{background:#fff;color:#25395e;border-color:#d9e2f3}main{padding:12px 12px}.bar{gap:7px}.bar.compact{margin:0;align-items:center}.bar.compact select{min-width:120px}.sr-label{font-size:13px;color:#445675;font-weight:700}.navtab{border:0;border-radius:7px 7px 0 0;background:transparent;color:#52627d;font-weight:700;padding:11px 17px}.navtab.selected{color:#315bc1;background:#fff;border-bottom:3px solid #315bc1}.stat{border:1px solid #d4def0;border-radius:9px;box-shadow:0 2px 8px #253d6b0b;min-width:160px}.stat:nth-child(1){border-top:4px solid #4167c8}.stat:nth-child(2){border-top:4px solid #825ed0}.stat:nth-child(3){border-top:4px solid #21957d}.stat:nth-child(4){border-top:4px solid #e9a449}.stat strong{color:#152a50}.sectionheading{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;background:#fff;border:1px solid #d4def0;border-radius:8px 8px 0 0}.tablewrap{border:1px solid #b5c4dd;max-height:calc(100vh - 230px);background:#fff}table{font-size:14px}th{background:#dbe5f8;color:#203a69;font-weight:800;border-color:#afc0df}td{background:#fff;color:#243550;border-color:#d1dbea}tbody tr:nth-child(even) td{background:#f5f8ff}tbody tr:hover td{background:#eaf1ff}.months th{min-width:58px}.months td{min-width:58px}.education-title{display:flex;align-items:center;gap:8px;font-weight:700;color:#1b315c}.education-title input{accent-color:#476bc8}.pill{font-weight:700;padding:5px 9px}.pill.pending{background:#fff1d8;color:#995c00}.pill.applied{background:#e5ecff;color:#3353a5}.pill.complete{background:#dff5eb;color:#116d4f}.pill.excluded{background:#e9ebef;color:#586474}.timeline.active{background:#4677d2}.timeline.done{background:#25a080}.editbtn{color:#315ac0;border-color:#b8c8e8}.empty{text-align:center;padding:36px;color:#697992}.settings-dialog .modal{height:auto;max-height:min(90dvh,600px);width:min(760px,96vw);padding:18px 20px}.settings-dialog #modalBody{flex:initial;overflow:visible;display:block}.settings-dialog .modal .foot{margin-top:14px}.settings-dialog .fields{gap:12px}.settings-dialog .note{font-size:13px}.settings-dialog .modalhead{margin-bottom:15px}
+
+/* v12: compact aligned toolbar and visual analytics */
+header{padding:9px 14px}header button{height:37px}
+main>.bar:first-child{background:#fff;border:1px solid #d7e1f1;border-radius:9px;padding:8px 10px;margin-bottom:10px;justify-content:space-between}
+#calendarActions{margin-left:auto;gap:7px}#calendarActions button,#calendarActions select{height:39px;min-height:39px;padding:7px 11px}
+.filterholder{position:relative}.filtertoggle{min-width:158px;text-align:left;background:#f4f7ff;border-color:#b9c9e8!important}.filtermenu{position:absolute;right:0;top:43px;z-index:15;background:white;border:1px solid #b7c7df;box-shadow:0 8px 22px #152c4d24;border-radius:7px;padding:10px;min-width:180px}.filtermenu[hidden]{display:none}.filtermenu label{display:flex;align-items:center;gap:8px;padding:7px 4px;white-space:nowrap}.filtermenu input{accent-color:#4167c8}.filtermenu button{width:100%;margin-top:4px}
+#year{min-width:105px!important}#summary{gap:9px}.stat{min-width:185px}.stat:nth-child(2){border-top-color:#e5a13c}.stat:nth-child(3){border-top-color:#239b78}
+.analysis-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}.analysis-kpi,.analysis-panel{background:white;border:1px solid #d2ddee;border-radius:10px;padding:15px}.analysis-kpi span{display:block;color:#526781;font-size:14px}.analysis-kpi strong{display:block;font-size:25px;color:#203f79;margin-top:6px}.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.analysis-panel h3{margin:0 0 7px;font-size:18px;color:#1f3d73}.chartrows{display:flex;flex-direction:column;gap:10px;margin-top:18px}.chartrow{display:grid;grid-template-columns:minmax(90px,145px) minmax(50px,1fr) 48px 48px;align-items:center;gap:9px;font-size:13px}.chartlabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.charttrack{background:#edf2fb;border-radius:5px;height:17px;overflow:hidden}.chartfill{height:100%;border-radius:5px;background:#4677d2}.chartfill.field{background:#825ed0}.chartfill.dept{background:#e2a13f}.chartrow b{text-align:right}.chartrow small{text-align:right;color:#61718a}.progressbar{background:#e7ecf5;border-radius:8px;height:17px;overflow:hidden}.progressbar>div{height:100%;background:#239b78}
+@media(max-width:900px){.analysis-grid{grid-template-columns:1fr}.analysis-summary{grid-template-columns:repeat(2,1fr)}main>.bar:first-child{flex-wrap:wrap}}
+
+/* v13: navigation alignment and consistent control dimensions */
+main>.bar:first-child{justify-content:flex-start;gap:12px;flex-wrap:wrap;background:#fff;padding:8px 10px;border:1px solid #d6dfeb;border-radius:8px}
+#calendarActions{margin:0 0 0 28px;align-items:center;gap:8px;flex-wrap:wrap}
+#calendarActions select,#calendarActions button{height:38px;min-height:38px;padding:6px 12px;line-height:24px}
+#statusFilter{min-width:120px;background:#fff;border:1px solid #b9c8de;border-radius:5px}
+#year{min-width:100px}
+#summary{margin-top:10px}
+@media(max-width:900px){#calendarActions{margin-left:0}}
+
+/* v14: white canvas, distinct surfaces and consistent red incomplete status */
+html,body{background:#fff!important;color:#182b44!important}
+main{background:#fff!important}
+main>.bar:first-child{background:#f0f4fb!important;border:1px solid #c4d3e9!important}
+.navtab{background:#e7edf8;color:#33496e;border:1px solid #d0daeb;border-bottom:0}
+.navtab.selected{background:#fff;color:#244fb6;border-bottom:3px solid #315bc1}
+#calendarActions select,#year{background:#fff;border:1px solid #9eafc9;color:#1b3151}
+button{background:#f6f8fc;border-color:#b6c6de;color:#203b68}
+button.primary{background:#315dc1;color:#fff;border-color:#315dc1}
+button.danger{background:#fff3f3;color:#b32631;border-color:#e9b6bb}
+#summary{background:#fff}
+.stat{background:#fff;border:1px solid #ccd7e7}
+.stat-overdue{border-top:4px solid #d92d3a!important;background:#fff8f8}
+.stat-overdue strong{color:#c51e30!important}
+.sectionheading{background:#edf3fc;color:#1c365f;border-color:#b9c9e2}
+.tablewrap{background:#fff}
+th{background:#dce7f8!important;color:#172e58!important;border-color:#9fb3d2!important}
+td{background:#fff!important;color:#243550}
+tbody tr:nth-child(even) td{background:#f7faff!important}
+tbody tr:hover td{background:#edf4ff!important}
+.months td:nth-child(even){background:inherit}
+.timeline.overdue{background:#dc3545!important}
+.timeline.done{background:#26936d!important}
+.pill.pending{background:#ffe5e7;color:#b42331}
+.analysis-panel,.analysis-kpi{background:#fff}
+.analysis-panel h3{color:#1c3b72}
+
+/* v15: consolidated actions, equal-height controls */
+#calendarActions{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+#calendarActions>button,#calendarActions>select{box-sizing:border-box;height:38px!important;min-height:38px!important;max-height:38px!important;line-height:22px!important;padding:7px 12px!important;margin:0!important;vertical-align:middle}
+#calendarActions #year{min-width:104px!important}
+#calendarActions #statusFilter{min-width:112px}
+@media(max-width:850px){#calendarActions{margin-left:0;flex-wrap:wrap}}
+
+/* v16: reference screenshot layout, compact profile */
+header{height:48px;box-sizing:border-box;padding:8px 10px}header h1{font-size:20px}header span{font-size:13px}
+main{padding:7px 6px}main>.bar:first-child{display:flex;justify-content:flex-start;gap:6px;align-items:center;padding:5px 7px;margin-bottom:8px;flex-wrap:wrap;min-height:50px;background:#fff!important}
+.navtab{padding:8px 12px;min-height:36px}#calendarActions{margin:0 0 0 clamp(24px,9vw,190px);gap:5px;flex-wrap:nowrap}
+#calendarActions>button,#calendarActions>select,#utilityActions>button{height:36px!important;min-height:36px!important;max-height:36px!important;box-sizing:border-box;padding:5px 9px!important;font-size:13px}
+#calendarActions #year{min-width:92px!important;width:92px}#calendarActions #statusFilter{min-width:95px;width:95px}
+#utilityActions{margin-left:auto;gap:5px;flex-wrap:nowrap}#utilityActions button{white-space:nowrap;background:#fff;border:1px solid #c3cde1;color:#283a65}
+#summary{margin:6px 0 9px;gap:8px}.stat{min-width:160px;padding:10px 12px}.sectionheading{padding:9px 11px}.tablewrap{max-height:calc(100vh - 218px)}
+.settings-dialog .modal{width:min(690px,94vw);max-height:calc(100dvh - 40px);height:auto!important;padding:15px 18px}.settings-dialog .modalhead{margin-bottom:12px}.settings-dialog #modalBody{overflow:visible}.settings-dialog .settings-fields{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:12px 14px;justify-content:start}.settings-dialog .settings-fields label{min-width:0}.settings-dialog .settings-fields input{width:100%;box-sizing:border-box;max-width:300px}.settings-dialog .foot{margin-top:14px}
+@media(max-width:1200px){#calendarActions{margin-left:16px}#utilityActions{margin-left:10px}}@media(max-width:850px){#calendarActions{margin-left:0;flex-wrap:wrap}#utilityActions{margin-left:0;flex-wrap:wrap}.settings-dialog .settings-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* v17: readable, editable education title; rose tinted inputs */
+.months th:last-child,.months td:last-child{min-width:58px}
+.title-link{border:0;background:transparent;color:#244a9c;font-weight:800;padding:0;text-align:left;cursor:pointer;text-decoration:underline;text-decoration-color:#b7c9ee;text-underline-offset:3px}
+.title-link:hover{color:#14336e;background:#edf2ff;text-decoration-color:currentColor}
+.editor-layout .fields input:not([type="checkbox"]),.editor-layout .fields select,.editor-layout .fields textarea{background:#fff0f5!important;border:1px solid #dda8be!important;color:#263044}
+.editor-layout .fields input:focus,.editor-layout .fields select:focus,.editor-layout .fields textarea:focus{background:#ffe5ef!important;outline:2px solid #d47ca6!important;border-color:#b85b87!important}
+.editor-layout .fields input[disabled],.editor-layout .fields select[disabled]{background:#f3edf0!important}
+
+/* v19: compact analysis and certificate management */
+.analysis-grid{gap:10px}.analysis-panel{padding:12px;min-height:0}.analysis-panel h3{font-size:16px;margin-bottom:4px}.analysis-panel .muted{margin:4px 0;font-size:12px}.analysis-panel .chartrows{gap:5px;margin-top:10px}.analysis-panel .chartrow{min-height:20px}.analysis-panel .charttrack{height:13px}
+.monthly-chart{height:218px;display:flex;gap:6px;margin-top:9px;font-size:11px}.monthly-y{display:flex;flex-direction:column;justify-content:space-between;text-align:right;width:20px;height:190px;color:#50627c}.monthly-plot{flex:1;position:relative;min-width:0;height:190px;border-left:1px solid #9aabc4;border-bottom:1px solid #9aabc4}.monthly-grid{position:absolute;inset:0;display:flex;flex-direction:column-reverse;justify-content:space-between;pointer-events:none}.monthly-grid span{height:0;border-top:1px solid #e4eaf4;font-size:0}.monthly-bars{position:absolute;inset:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:7px;align-items:end;padding:0 8px}.monthly-col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.monthly-bar{width:min(100%,26px);border-radius:3px 3px 0 0;min-height:0}.monthly-value{position:absolute;bottom:calc(100% + 3px);display:none}.monthly-labels{position:absolute;left:0;right:0;top:194px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));text-align:center;font-size:11px;color:#41536e}
+.cert-table{background:#fff;border:1px solid #ccd7e7;border-radius:8px;overflow:auto}.cert-table table{width:100%;border-collapse:collapse}.cert-table th,.cert-table td{padding:12px;border-bottom:1px solid #d9e2ef;text-align:left}.cert-table th{background:#e8eefb}.cert-link{margin:3px;color:#315dc1}.cert-manager{display:grid;gap:12px}.cert-drop{border:2px dashed #9baec9;padding:16px;border-radius:8px;background:#f7faff;display:flex;align-items:center;gap:15px}.cert-file{display:flex;align-items:center;gap:8px;padding:7px;border-bottom:1px solid #e0e6ef}.cert-file span{flex:1;overflow-wrap:anywhere}.cert-preview{min-height:160px;height:min(45vh,430px);background:#f7f8fb;border:1px solid #dce2ec;border-radius:6px;overflow:auto;display:grid;place-items:center}.cert-preview iframe{width:100%;height:100%;border:0}.cert-preview img{max-width:100%;max-height:100%;object-fit:contain}
+
+/* v20: compact search controls and full-width certificates */
+#calendarActions{display:flex;align-items:center;gap:8px;margin-left:18px;flex-wrap:wrap}
+#calendarActions select,#calendarActions input,#calendarActions button{height:38px}
+#searchEducation{width:210px;min-width:130px;border:1px solid #b9c9e8;border-radius:5px;padding:6px 10px;background:white}
+.action-gap{width:18px;flex:none}
+#content .cert-table{width:100%;max-width:none}#content .cert-table table{width:100%;table-layout:auto}
+#content .cert-table td:first-child{width:38%}
+@media(max-width:950px){#calendarActions{margin-left:0}.action-gap{width:5px}#searchEducation{width:155px}}
+
+/* v21: move filters alongside KPI cards; consistent tab and larger selects */
+#overviewRow{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:8px 0 10px;flex-wrap:wrap}
+#overviewRow #summary{display:flex;gap:8px;margin:0;flex:0 0 auto}
+#overviewRow #calendarActions{margin:0 0 0 32px!important;gap:9px;flex:1 1 auto;justify-content:flex-start;flex-wrap:wrap}
+#calendarActions #statusFilter,#calendarActions #year{font-size:16px!important;height:38px!important;line-height:22px!important;padding:5px 11px!important}
+#calendarActions #statusFilter{min-width:106px!important;width:106px!important}
+#calendarActions #year{min-width:104px!important;width:104px!important}
+#navCerts{min-width:113px!important;padding-left:12px!important;padding-right:12px!important;text-align:center}
+#navCalendar{min-width:113px!important}
+@media(max-width:1000px){#overviewRow{gap:12px}#overviewRow #calendarActions{margin-left:0!important}}
+
+/* v22: four equal-sized analytical panels and independent year range */
+.analysis-toolbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:10px 12px;margin:2px 0 10px;border:1px solid #d2ddee;border-radius:8px;background:#f6f8fd}
+.analysis-toolbar>strong{font-size:17px;color:#203f79}.analysis-range{display:flex;gap:12px;align-items:center}.analysis-range label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:400}.analysis-range select{height:35px;min-width:100px;font-size:15px;font-weight:400;background:#fff}
+.history-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}.history-grid>.analysis-panel{height:292px;min-height:292px;max-height:292px;overflow:auto;box-sizing:border-box}
+.year-trend,.rate-rows,.field-rows{display:flex;flex-direction:column;gap:10px;margin-top:14px;max-height:185px;overflow:auto}.year-trend-row{display:grid;grid-template-columns:60px minmax(0,1fr) 72px 45px;gap:9px;align-items:center;font-size:13px}.year-track,.rate-track,.field-track{display:flex;height:17px;background:#edf1f8;border-radius:4px;overflow:hidden}.year-complete,.rate-done{background:#389577;height:100%}.year-pending,.rate-pending{background:#d34d58;height:100%}.year-trend-row small,.rate-row small,.field-row small{color:#62718a;text-align:right}.chart-legend{display:flex;gap:18px;margin-top:13px;font-size:12px;color:#47556c}.chart-legend span:before{content:'';display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}.legend-done:before{background:#389577}.legend-pending:before{background:#d34d58}.rate-row{display:grid;grid-template-columns:60px minmax(0,1fr) 45px 120px;align-items:center;gap:9px;font-size:13px}.rate-row strong{color:#274878}.field-row{display:grid;grid-template-columns:125px minmax(0,1fr) 42px 42px;gap:8px;align-items:center;font-size:13px}.field-row>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.field-track>div{background:#8264cf;height:100%}
+.history-grid .monthly-chart{height:205px;max-height:205px}
+@media(max-width:900px){.history-grid{grid-template-columns:1fr}.history-grid>.analysis-panel{height:292px}}
+
+/* v23 adjustments */
+.analysis-range label{font-weight:400!important}.analysis-range select{font-weight:400!important}
+.rate-pies{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;overflow:auto;max-height:195px;margin-top:10px}
+.rate-pie-item{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:125px;font-size:13px}
+.rate-pie{width:106px;height:106px;border-radius:50%;display:grid;place-items:center}
+.rate-pie-center{width:65px;height:65px;border-radius:50%;background:white;display:grid;place-items:center;text-align:center;font-size:13px;font-weight:600;color:#263957}
+.rate-pie-item small{font-size:11px;color:#596579}.legend-empty:before{background:#e5e7eb!important}
+.summary-hours{font-size:15px;font-weight:600;color:#23836a;margin-left:12px}
+.completion input[type=number]{background:#fff3f7;border:1px solid #e6adc1;width:100%;height:36px;padding:6px;border-radius:5px}
+
+/* v24: balanced analysis dashboard */
+#summary{gap:9px}#summary .stat{min-width:152px}#summary .stat-hours{border-top:3px solid #8b65c9}#summary .stat-hours strong{color:#6943ad}
+.analysis-toolbar{gap:14px}.analysis-range{gap:9px}.analysis-range select{font-weight:400!important;min-width:112px;height:38px}.range-tilde{font-size:20px;color:#43516d;font-weight:400}
+.history-grid>.analysis-panel{height:320px;min-height:320px;max-height:320px;overflow:hidden;display:flex;flex-direction:column}
+.history-grid .year-trend{flex:1;max-height:224px;overflow:auto;margin-top:17px;gap:15px}
+.history-grid .year-trend-row{grid-template-columns:65px minmax(0,1fr) 76px 50px;gap:12px;font-size:15px;min-height:33px}
+.history-grid .year-track{height:29px;border-radius:6px}.history-grid .year-trend-row>span:first-child{font-weight:600}
+.history-grid .rate-pies{flex:1;max-height:226px;overflow:auto;gap:24px;align-items:center;justify-content:space-evenly;margin-top:7px;flex-wrap:nowrap}
+.history-grid .rate-pie-item{min-width:145px;gap:8px;font-size:15px;flex:1;max-width:200px}
+.history-grid .rate-pie{width:clamp(112px,10vw,154px);height:clamp(112px,10vw,154px)}
+.history-grid .rate-pie-center{width:61%;height:61%;font-size:18px;font-weight:700}.history-grid .rate-pie-item small{font-size:12px;white-space:nowrap}
+.history-grid .chart-legend{margin-top:auto;padding-top:8px}.history-grid .monthly-chart{flex:1;min-height:0}
+@media(max-width:900px){.history-grid .rate-pies{flex-wrap:wrap;justify-content:flex-start}}
+#duplicateHint:not(:empty){color:#c71930!important;font-weight:800!important;font-size:calc(1em + 2pt)!important;line-height:1.45;overflow-wrap:anywhere}
+#drop{font-weight:600}
+</style></head><body><header><h1>교육ON</h1><span>공문 기반 교육 · 상시학습 · 교육이력 관리</span><span class="grow"></span><input id="restore" type="file" accept=".json" hidden onchange="importBackup(this)"></header><main><div class="bar"><button class="navtab" id="navCalendar" onclick="switchTab('calendar')">연간 교육표</button><button class="navtab" id="navStats" onclick="switchTab('stats')">교육이력 분석</button><button class="navtab" id="navCerts" onclick="switchTab('certs')">수료증</button><div id="utilityActions" class="bar compact"><button onclick="showSettings()">환경설정</button><button onclick="exportBackup()">데이터 백업</button><button onclick="document.getElementById('restore').click()">백업 복원</button></div></div><div id="overviewRow"><div id="summary" class="bar"></div><div id="calendarActions" class="bar compact"><select id="statusFilter" aria-label="진행상태" onchange="updateStatusFilter(this.value)"><option value="전체">전체</option><option value="미이수">미이수</option><option value="이수완료">이수완료</option></select><select id="year" aria-label="조회 연도" onchange="render()"></select><input id="searchEducation" type="search" placeholder="교육명·부서·과목 검색" aria-label="교육 검색" oninput="renderCalendar()"><span class="action-gap"></span><button class="danger" onclick="removeSelected()">선택삭제</button><button class="danger" onclick="removeAllEducation()">전체삭제</button><button class="primary" onclick="openEditor()">+ 교육등록</button></div></div><div id="content"></div></main>
+<div class="side" id="dialog"><div class="modal"><div class="modalhead"><h2 id="modalTitle">교육 등록</h2><button type="button" class="closex" aria-label="창닫기" title="창닫기" onclick="closeDialog()">×</button></div><div id="modalBody"></div><div class="foot"><button onclick="closeDialog()">닫기</button><button id="saveBtn" class="primary" onclick="saveDialog()">저장</button></div></div></div>
+<script>
+const CATALOG=[], DOCS=["2026년 긴급복지 신고의무자(전 직원) 의무교육 수강 재안내(전직원 공람).pdf", "2026년 노인 이해 사이버 교육 수료 협조 알림(재안내).pdf", "2026년 감염병 의무교육 수료 협조(재안내).pdf", "(참고)미이수자 대상 4대폭력예방 시청각교육 이수 계획.hwpx", "2026년 전 직원 4대폭력예방 통합교육 미이수자 시청각교육 실시 안내(전 직원 공람).pdf", "2026년도 공공부문 통일교육 수료 협조(재안내).pdf"];
+const KEY='educationon_v6', OLDKEYS=['education_on_v5','education_on_v4'];
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{profile:{org:'나주시',job:'',grade:'',role:'일반행정',annualHours:'',hoursBasis:'',notice:'',noticeDate:''},records:[],files:{},years:{}};
+let tab='calendar',mode='',editing=null,stagedFiles=[];
+let selectedStatus='전체';
+const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(db));return true}catch(e){alert('저장공간 부족: 데이터 백업 후 첨부파일을 줄이세요. '+e.message);return false}}
+function currentYear(){return +$('year').value||2026}function years(){let now=new Date().getFullYear();return [...new Set([2025,2026,2027,now,...db.records.map(r=>+r.year)])].sort((a,b)=>b-a)}
+function init(){let y=$('year').value||'2026';$('year').innerHTML=years().map(x=>`<option ${x==y?'selected':''}>${x}</option>`).join('');render()}
+function match(c){let job=(db.profile.job||'')+' '+(db.profile.role||'');let n=c.name;
+if(/안전보건관리책임자|안전관리자 직무|보건관리자 직무|관리감독자|현업업무|MSDS/.test(n))return /안전|보건|현업|시설|관리감독|화학|급식/.test(job)?'대상 검토':'직무 확인';
+if(/교육감|경상북도교육청|학교종사자/.test(c.target+' '+c.basis))return '근거 확인';return '공통 검토'}
+function mapped(c){return db.records.find(r=>r.year==currentYear()&&r.catalogId===c.id)}
+function switchTab(t){tab=t;render()}
+function render(){let y=currentYear(),rs=db.records.filter(r=>+r.year===y);$('calendarActions').style.display=tab==='calendar'?'flex':'none';$('navCalendar').classList.toggle('selected',tab==='calendar');$('navStats').classList.toggle('selected',tab==='stats');$('navCerts').classList.toggle('selected',tab==='certs');$('summary').innerHTML=`<div class="stat">등록 교육 <strong>${rs.length}건</strong></div><div class="stat stat-overdue">미이수 <strong>${rs.filter(r=>!['이수완료','증빙제출','대상아님'].includes(r.status)).length}건</strong></div><div class="stat">이수완료 <strong>${rs.filter(r=>['이수완료','증빙제출'].includes(r.status)).length}건</strong></div><div class="stat stat-hours">이수시간 <strong>${sumHours(rs)}h</strong></div>`;if(tab==='stats')return renderStats();if(tab==='certs')return renderCertificates();renderCalendar()}
+function sumHours(rs){return rs.filter(r=>['이수완료','증빙제출'].includes(r.status)).reduce((s,r)=>s+(+r.actualHours||0),0)}
+function renderCalendar(){let all=db.records.filter(r=>+r.year===currentYear());let q=($('searchEducation')?.value||'').trim().toLocaleLowerCase();let rs=all.filter(r=>{let st=r.status||'미신청',done=['이수완료','증빙제출'].includes(st);return (!q||[r.name,r.hostDept,r.field,r.courses,r.sites,r.notes].some(x=>String(x||'').toLocaleLowerCase().includes(q)))&&(selectedStatus==='전체'||(selectedStatus==='미이수'&&!done&&st!=='대상아님')||(selectedStatus==='이수완료'&&done))});$('content').innerHTML=`<div class="sectionheading"><div><strong>${currentYear()}년 교육 일정</strong><span class="muted"> · ${rs.length}건 표시 / 전체 ${all.length}건</span></div><span class="muted">교육명을 선택하면 상세정보를 수정할 수 있습니다.</span></div><div class="tablewrap"><table class="months"><thead><tr><th style="min-width:310px;text-align:left">교육명 · 이수기한</th><th>상태</th>${Array.from({length:12},(_,i)=>`<th>${i+1}월</th>`).join('')}</tr></thead><tbody>${rs.map(r=>{let m=+(r.deadline||'').slice(5,7),done=['이수완료','증빙제출'].includes(r.status),st=r.status||'미신청',cls=done?'complete':st==='신청완료'?'applied':st==='대상아님'?'excluded':'pending';return `<tr><td style="text-align:left"><label class="education-title"><input type="checkbox" class="pick" value="${esc(r.id)}"><button type="button" class="title-link" onclick="openEditor('${esc(r.id)}')">${esc(r.name)}</button></label><div class="small muted" style="padding-left:25px">첨부 ${(r.files||[]).length}건${r.deadline?' · 이수기한 '+esc(r.deadline):''}${r.completedCourse?' · 수강 '+esc(r.completedCourse):''}${r.hostDept?' · 주관 '+esc(r.hostDept):''}</div></td><td><span class="pill ${cls}">${esc(st)}</span></td>${Array.from({length:12},(_,i)=>`<td>${m===i+1?`<div class="timeline ${done?'done':'overdue'}"></div>`:''}</td>`).join('')}</tr>`}).join('')||'<tr><td colspan="14" class="empty">조건에 해당하는 교육이 없습니다.</td></tr>'}</tbody></table></div>`}
+let analysisStartYear=null,analysisEndYear=null;
+function updateAnalysisRange(which,value){if(which==='start')analysisStartYear=+value;else analysisEndYear=+value;if(analysisStartYear>analysisEndYear){if(which==='start')analysisEndYear=analysisStartYear;else analysisStartYear=analysisEndYear}renderStats()}
+function renderStats(){
+ const available=[...new Set([...years(),...db.records.map(r=>+r.year),new Date().getFullYear(),analysisStartYear,analysisEndYear])].filter(Number.isFinite).sort((a,b)=>a-b);
+ const latest=Math.max(currentYear(),...available),earliest=Math.min(...available);
+ if(analysisStartYear===null)analysisStartYear=new Date().getFullYear();
+ if(analysisEndYear===null)analysisEndYear=new Date().getFullYear();
+ const start=analysisStartYear,end=analysisEndYear;
+ const range=Array.from({length:end-start+1},(_,i)=>start+i);
+ const done=r=>['이수완료','증빙제출'].includes(r.status);
+ const stats=range.map(year=>{const records=db.records.filter(r=>+r.year===year&&r.status!=='대상아님');const completed=records.filter(done);return {year,total:records.length,complete:completed.length,pending:records.length-completed.length,hours:sumHours(records),rate:records.length?Math.round(completed.length/records.length*100):0}});
+ const maxTotal=Math.max(1,...stats.map(s=>s.total));
+ const opts=available.map(y=>`<option value="${y}" ${y===start?'selected':''}>${y}년</option>`).join('');
+ const optsEnd=available.map(y=>`<option value="${y}" ${y===end?'selected':''}>${y}년</option>`).join('');
+ const yearControls=`<div class="analysis-range"><select aria-label="시작년도" onchange="updateAnalysisRange('start',this.value)">${opts}</select><span class="range-tilde">~</span><select aria-label="종료년도" onchange="updateAnalysisRange('end',this.value)">${optsEnd}</select></div>`;
+ const trend=`<div class="year-trend">${stats.map(s=>`<div class="year-trend-row"><span>${s.year}년</span><div class="year-track"><div class="year-complete" style="width:${s.complete/maxTotal*100}%"></div><div class="year-pending" style="width:${s.pending/maxTotal*100}%"></div></div><span>${s.complete}/${s.total}건</span><small>${s.hours}h</small></div>`).join('')}</div><div class="chart-legend"><span class="legend-done">이수완료</span><span class="legend-pending">미이수</span></div>`;
+ const rates=`<div class="rate-pies">${stats.map(s=>`<div class="rate-pie-item"><span>${s.year}년</span><div class="rate-pie" style="background:${s.total?`conic-gradient(#389577 0 ${s.rate}%,#d34d58 ${s.rate}% 100%)`:'#e5e7eb'}"><div class="rate-pie-center">${s.total?s.rate+'%':'자료 없음'}</div></div><small>${s.total?`이수 ${s.complete}건 / 미이수 ${s.pending}건`:'등록 0건'}</small></div>`).join('')}</div><div class="chart-legend"><span class="legend-done">이수율</span><span class="legend-pending">미이수율</span><span class="legend-empty">등록 없음</span></div>`;
+ const monthly=Array.from({length:12},(_,i)=>({name:(i+1)+'월',count:0,hours:0}));const fields={};
+ for(const r of db.records.filter(r=>+r.year>=start&&+r.year<=end&&done(r))){const date=r.completedDate||r.deadline||r.submit||'';const m=Number(String(date).slice(5,7));if(m>=1&&m<=12){monthly[m-1].count++;monthly[m-1].hours+=Number(r.actualHours)||0}const f=r.field||'미분류';if(!fields[f])fields[f]={name:f,count:0,hours:0};fields[f].count++;fields[f].hours+=Number(r.actualHours)||0}
+ const fieldArr=Object.values(fields).sort((a,b)=>b.count-a.count);const maxField=Math.max(1,...fieldArr.map(f=>f.count));
+ const fieldHtml=fieldArr.length?`<div class="field-rows">${fieldArr.map(f=>`<div class="field-row"><span title="${esc(f.name)}">${esc(f.name)}</span><div class="field-track"><div style="width:${f.count/maxField*100}%"></div></div><b>${f.count}건</b><small>${f.hours}h</small></div>`).join('')}</div>`:'<p class="muted">선택한 기간에 이수완료 교육이 없습니다.</p>';
+ $('content').innerHTML=`<div class="analysis-toolbar"><strong>교육이력 분석</strong>${yearControls}</div><div class="analysis-grid history-grid"><section class="analysis-panel"><h3>교육실적 · 연도별 비교</h3><p class="muted">연도별 전체 등록교육 중 이수완료 건수 · 교육시간</p>${trend}</section><section class="analysis-panel"><h3>연도별 이수율</h3><p class="muted">전체 등록교육 대비 이수완료·미이수 비율 (대상아님 제외)</p>${rates}</section><section class="analysis-panel"><h3>월별 이수현황</h3><p class="muted">선택 기간 이수완료 건수 · 이수일 미입력 시 이수기한 기준</p>${monthlyChart(monthly)}</section><section class="analysis-panel"><h3>분야별 이수현황</h3><p class="muted">선택 기간 분야별 이수 건수와 교육시간</p>${fieldHtml}</section></div>`;
+}
+
+function monthlyChart(monthly){
+ const colors=['#4776d0','#d65a75','#7b62d3','#159e91','#d68b35','#4b9d53','#bb64a7','#3387b9','#aa7b3e','#5a72c8','#e07853','#697fa1'];
+ const grid=[0,1,2,3,4,5].map(n=>`<span>${n}</span>`).join('');
+ return `<div class="monthly-chart" role="img" aria-label="월별 이수 건수 세로 막대그래프, 0건에서 5건까지"><div class="monthly-y">${[5,4,3,2,1,0].map(n=>`<span>${n}</span>`).join('')}</div><div class="monthly-plot"><div class="monthly-grid">${grid}</div><div class="monthly-bars">${monthly.map((x,i)=>`<div class="monthly-col" title="${i+1}월 ${x.count}건"><div class="monthly-bar" style="height:${Math.min(100,x.count/5*100)}%;background:${colors[i]}"></div><span class="monthly-value">${x.count?x.count+'건':''}</span></div>`).join('')}</div><div class="monthly-labels">${monthly.map((x,i)=>`<span>${i+1}월</span>`).join('')}</div></div></div>`;
+}
+function renderCertificates(){
+ const records=db.records.filter(r=>+r.year===currentYear());
+ $('content').innerHTML=`<div class="sectionheading"><strong>${currentYear()}년 수료증 관리</strong><span class="muted">교육별 수료증을 첨부하고 미리보기·열기·삭제할 수 있습니다. 데이터 백업에 포함됩니다.</span></div><div class="cert-table"><table><thead><tr><th>교육명</th><th>진행상태</th><th>수료증</th><th>관리</th></tr></thead><tbody>${records.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.status||'미신청')}</td><td>${(r.certificateFiles||[]).map(f=>`<button class="cert-link" onclick="viewFile('${esc(f.id)}')">${esc(f.name)}</button>`).join('')||'<span class="muted">미등록</span>'}</td><td><button onclick="openCertificates('${esc(r.id)}')">수료증 관리</button></td></tr>`).join('')||'<tr><td colspan="4">등록된 교육이 없습니다.</td></tr>'}</tbody></table></div>`;
+}
+function openCertificates(id){
+ const r=db.records.find(x=>x.id===id);if(!r)return;
+ const rows=(r.certificateFiles||[]).map(f=>`<div class="cert-file"><span>${esc(f.name)}</span><button onclick="previewCertificate('${esc(f.id)}')">미리보기</button><button onclick="viewFile('${esc(f.id)}')">열기</button><button class="danger" onclick="deleteCertificate('${esc(r.id)}','${esc(f.id)}')">삭제</button></div>`).join('');
+ openDialog('수료증 관리 · '+r.name,`<div class="cert-manager"><label class="cert-drop">수료증 파일 선택 또는 드래그앤드롭<input type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,.hwpx" onchange="addCertificates('${esc(id)}',this.files)" /></label><div>${rows||'<p class="muted">등록된 수료증이 없습니다.</p>'}</div><div id="certPreview" class="cert-preview">수료증을 선택하면 미리보기가 표시됩니다.</div></div>`,'certs',false);
+ const drop=$('modalBody').querySelector('.cert-drop');drop.ondragover=e=>e.preventDefault();drop.ondrop=e=>{e.preventDefault();addCertificates(id,e.dataTransfer.files)};
+}
+async function addCertificates(id,files){let r=db.records.find(x=>x.id===id);if(!r)return;r.certificateFiles ||= [];
+ for(const f of files){if(Object.values(db.files).some(x=>x.name===f.name&&x.size===f.size)&&!confirm('같은 이름과 크기의 파일이 존재합니다. 계속 첨부하시겠습니까?'))continue;
+ const fid='C'+Date.now()+Math.random().toString(36).slice(2);db.files[fid]={name:f.name,size:f.size,data:await fileToData(f)};r.certificateFiles.push({id:fid,name:f.name});}
+ if(persist())openCertificates(id);renderSummaryOnly();}
+function renderSummaryOnly(){} // 기존 교육 현황 수치는 수료증 첨부로 변경되지 않음
+function deleteCertificate(id,fid){if(!confirm('이 수료증을 삭제할까요?'))return;const r=db.records.find(x=>x.id===id);if(!r)return;r.certificateFiles=(r.certificateFiles||[]).filter(x=>x.id!==fid);if(!db.records.some(x=>(x.files||[]).some(f=>f.id===fid)||(x.certificateFiles||[]).some(f=>f.id===fid)))delete db.files[fid];persist();openCertificates(id)}
+function previewCertificate(id){const f=db.files[id];if(!f)return;const el=$('certPreview');if(!el)return;const mime=f.data?.slice(5,45)||'';if(mime.includes('pdf'))el.innerHTML=`<iframe title="수료증 미리보기" src="${f.data}"></iframe>`;else if(mime.includes('image/'))el.innerHTML=`<img alt="수료증 미리보기" src="${f.data}">`;else el.textContent='이 형식은 브라우저 내 미리보기를 지원하지 않습니다. 열기 버튼을 이용하세요.'}
+
+function openDialog(title,body,m,save=true){mode=m;$('dialog').classList.toggle('settings-dialog',m==='settings');$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('saveBtn').style.display=save?'':'none';$('dialog').classList.add('open')}
+function closeDialog(){$('dialog').classList.remove('open','settings-dialog');stagedFiles=[];if(previewURL){URL.revokeObjectURL(previewURL);previewURL=null}}
+let previewURL=null;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('dialog').classList.contains('open'))closeDialog()});$('dialog').addEventListener('click',e=>{if(e.target===$('dialog'))closeDialog()});
+function showSettings(){let p=db.profile;openDialog('환경설정',`<div class="fields settings-fields">${field('소속기관','org',p.org)}${field('부서','department',p.department||'')}${field('직급','grade',p.grade)}${field('담당업무','job',p.job)}${field('일자','profileDate',p.profileDate||new Date().toISOString().slice(0,10),'date')}</div>`,'settings')}
+function field(label,id,value='',type='text'){return `<label>${label}<input id="${id}" type="${type}" value="${esc(value)}"></label>`}
+const DOCUMENT_RULES=[
+{test:/감염병.*의무교육|감염병.*수료/,name:'2026년 감염병 의무교육',deadline:'2026-11-30',submit:'2026-11-30',field:'재난·안전',courses:'일반 직원: 감염병 명칭 포함 강좌 중 선택 · 1시간 이상\n보건소·보건지소·보건진료소: 4시간 이상\n역학조사반원: 10시간 이상',sites:'행정안전부 나라배움터\n전남광주통합특별시 공무원교육원',notes:'전 직원(공무직·임기제·기간제 포함). 1년 미만 단기 기간제 등 제외 조건 확인. 관련: 감염병예방법 제18조의5'},
+{test:/긴급복지.*신고의무/,name:'2026년 긴급복지 신고의무자 교육',deadline:'2026-12-11',submit:'2026-12-14',field:'복지·인권',courses:'긴급복지지원 신고의무 교육(2026) · 1시간',sites:'한국보건복지인재원 | http://edu.kohi.or.kr/in',notes:'교육대상: 전 공무원·공무직(기간제·임기제 적용 여부는 공문 담당부서 확인). 근거: 긴급복지지원법 제7조'},
+{test:/노인.*이해.*교육/,name:'2026년 노인 이해 교육',deadline:'2026-10-30',submit:'2026-11-06',field:'복지·인권',courses:'3개 중 택 1\n노인 인권, 마음의 온도를 더하다 · 4시간\n노인 학대신고 의무자 · 1시간\n행복하고 존엄한 노년의 삶 · 1시간',sites:'KOHI | http://in.kohi.or.kr\n나라배움터 | http://logodi.nhi.go.kr',notes:'전 직원(공무원·청원경찰·공무직·기간제 등). 근거: 나주시 고령친화도시 조성 및 노인복지 증진에 관한 조례'},
+{test:/공공부문.*통일교육/,name:'2026년 공공부문 통일교육',deadline:'2026-11-30',submit:'2026-11-30',field:'행정·법규',courses:'연 1회 1시간 이상\n나라배움터: 통일미래비전과 과제\n국립평화통일민주교육원: 통일 명칭 포함 강좌 중 선택',sites:'나라배움터\n국립평화통일민주교육원',notes:'전 직원(기간제 제외). 근거: 통일교육지원법 제6조의7'},
+{test:/4대폭력.*시청각|미이수자.*4대폭력/,name:'2026년 4대폭력 예방교육(현장근로자 시청각)',deadline:'2026-11-30',submit:'2026-12-02',field:'복지·인권',courses:'성희롱·성매매·성폭력·가정폭력 예방교육(시청각)',sites:'예방교육통합관리시스템 | https://shp.mogef.go.kr/shp/front/main.do',notes:'사이버교육이 어려운 현장근로자(기간제·공무직 등). 부서 자체교육 및 결과보고'},
+];
+// 공문 제목과 기준교육명은 다를 수 있으므로 교육명·별칭을 함께 대조한다.
+const CATALOG_ALIASES=[
+ {idName:'통일교육',pattern:/통일교육|통일미래비전/},
+ {idName:'감염병 교육',pattern:/감염병.*(의무교육|교육|수료)/},
+ {idName:'긴급복지신고의무자교육',pattern:/긴급복지.*신고의무/},
+ {idName:'사회적장애인식개선교육',pattern:/장애인식개선/},
+ {idName:'성희롱 예방교육',pattern:/성희롱.*예방교육/},
+ {idName:'성매매 예방교육',pattern:/성매매.*예방교육/},
+ {idName:'성폭력 예방교육',pattern:/성폭력.*예방교육/},
+ {idName:'가정폭력 예방교육',pattern:/가정폭력.*예방교육/}
+];
+function normTitle(v){return String(v||'').replace(/\.pdf$|\.hwpx$|\.docx$/gi,'').replace(/20\d{2}년(?:도)?|\(.*?\)|\[.*?\]|재안내|수료협조|실시안내|공공부문|전직원|[\s·_\-]/g,'').toLowerCase()}
+function findCatalogForDocument(name){
+ const title=normTitle(name);if(!title)return null;
+ // 4대폭력 통합교육은 4개 교육을 일괄 이수할 수 있어도 하나의 기준교육으로 임의 병합하지 않는다.
+ if(/4대폭력|폭력예방통합/.test(title))return null;
+ const alias=CATALOG_ALIASES.find(a=>a.pattern.test(title));
+ if(alias)return CATALOG.find(c=>c.name===alias.idName)||null;
+ const matches=CATALOG.filter(c=>{const n=normTitle(c.name);return n.length>=4&&(title.includes(n)||n.includes(title))});
+ return matches.length===1?matches[0]:null;
+}
+function reconcileLegacyCatalog(){
+ // 이전 버전에서 별도 교육으로 저장한 공문을 기준교육에 다시 연결한다.
+ let changed=false;
+ for(const r of [...db.records]){
+  if(r.catalogId)continue;
+  const c=findCatalogForDocument(r.name)||((r.files||[]).map(f=>findCatalogForDocument(f.name)).find(Boolean));
+  if(!c)continue;
+  const prior=db.records.find(x=>x!==r&&+x.year===+r.year&&x.catalogId===c.id);
+  if(prior){
+   prior.files=[...(prior.files||[]),...(r.files||[]).filter(f=>!(prior.files||[]).some(p=>p.id===f.id))];
+   for(const k of ['deadline','submit','apply','courses','sites','notes','actualHours'])if(!prior[k]&&r[k])prior[k]=r[k];
+   if(['이수완료','증빙제출'].includes(r.status))prior.status=r.status;
+   db.records=db.records.filter(x=>x!==r);
+  }else r.catalogId=c.id;
+  changed=true;
+ }
+ if(changed)persist();
+}
+function chooseCatalogForUpload(file,docRule){return; /*
+ const c=findCatalogForDocument(file.name)||findCatalogForDocument(docRule?.name||'');
+ if(!c)return;
+ const existing=db.records.find(r=>+r.year===currentYear()&&r.catalogId===c.id);
+ $('dialog').dataset.catalog=c.id;
+ if(existing&&!$('dialog').dataset.id){
+  if(confirm('기준교육 「'+c.name+'」에 이미 등록된 교육이 있습니다. 기존 교육에 공문을 추가하고 수정하시겠습니까?\n취소하면 현재 입력 내용을 유지합니다.')){
+   // 편집창을 교체하면 업로드 중인 파일이 사라지므로 저장 시 기존 레코드에 병합한다.
+   $('dialog').dataset.id=existing.id;
+   $('extractStatus').textContent='기존 「'+c.name+'」 교육에 첨부문서를 추가합니다. 저장하면 기존 교육정보를 갱신합니다.';
+  }
+ }else if(!existing){
+  $('extractStatus').textContent='기준교육 「'+c.name+'」과 연결되었습니다. 저장 시 회색 계획행이 등록 상태로 변경됩니다.';
+ }
+}
+*/}
+function suggestDocument(file){return DOCUMENT_RULES.find(r=>r.test.test(file.name.replace(/\s+/g,''))||r.test.test(file.name))||null}
+function showPreview(file){if(previewURL){URL.revokeObjectURL(previewURL);previewURL=null}let box=$('docPreview');if(!box)return;previewURL=URL.createObjectURL(file);let url=previewURL;if(file.type==='application/pdf'||/\.pdf$/i.test(file.name))box.innerHTML=`<iframe title="공문 PDF 미리보기" src="${url}#toolbar=1"></iframe>`;else if(file.type.startsWith('image/'))box.innerHTML=`<img alt="첨부 이미지 미리보기" src="${url}" style="width:100%;max-height:68vh;object-fit:contain">`;else box.innerHTML='<div class="note">이 파일 형식은 브라우저 내 직접 미리보기를 지원하지 않습니다. 첨부파일을 열어 확인하세요.</div>'}
+
+// 기존 제공 공문의 결재란(부서장) 및 '시행' 번호를 대조한 주관부서.
+// 신규·미확인 문서는 자동으로 추측하지 않고 사용자가 확인하도록 둔다.
+const ISSUER_RULES=[
+ {test:/감염병.*의무교육/,dept:'질병관리과'},
+ {test:/긴급복지.*신고의무자/,dept:'복지급여과'},
+ {test:/노인.*이해.*교육/,dept:'사회복지과'},
+ {test:/4대폭력.*예방/,dept:'가족아동과'},
+ {test:/공공부문.*통일교육/,dept:'총무과'}
+];
+function issuerFromKnownDocument(file){return ISSUER_RULES.find(x=>x.test.test(file.name))?.dept||''}
+
+// 표시 형식을 통일하되 기존 데이터는 그대로 읽을 수 있도록 한다.
+const KNOWN_SITE_URLS=[
+  [/나라배움터/i,'https://www.nhi.go.kr/'],
+  [/한국보건복지인재원|KOHI/i,'https://edu.kohi.or.kr/'],
+  [/국립평화통일민주교육원/i,'https://www.uniedu.go.kr/']
+];
+function formatEducationLines(value,kind){
+ const lines=String(value||'').split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
+ return lines.map(line=>{
+   let clean=line.replace(/^[○◯•·\-*]\s*/, '').trim();
+   if(kind==='site'){
+     const hasUrl=/https?:\/\/\S+/i.test(clean);
+     if(!hasUrl){let found=KNOWN_SITE_URLS.find(([pattern])=>pattern.test(clean));if(found)clean+=` (${found[1]})`;}
+     else if(!/\(https?:\/\//i.test(clean)){
+       clean=clean.replace(/\s*\|\s*(https?:\/\/\S+)/i,' ($1)');
+     }
+   }
+   return '○ '+clean;
+ }).join('\n');
+}
+function splitTargetBasis(raw){
+ // 기존 단일 notes 필드와 새로 분리 저장한 필드를 모두 지원한다.
+ const target=[],basis=[];
+ const rawLines=String(raw||'').replace(/\r/g,'').split(/\n/);
+ let section='target';
+ function pushPart(part,sectionHint){
+  let v=String(part||'').replace(/^[\s○◯•·*\-]+/,'').trim();
+  if(!v)return;
+  const explicit=v.match(/^(교육대상|대상|교육근거|관련근거|근거)\s*[:：]\s*(.*)$/);
+  if(explicit){section=/근거/.test(explicit[1])?'basis':'target';v=explicit[2].trim();if(!v)return;}
+  else if(sectionHint)section=sectionHint;
+  // 문장 중간의 '관련:' 또는 '근거:' 뒤는 별도 근거 항목으로 분리한다.
+  const inline=v.match(/^(.*?)(?:[.。]\s*|\s+)(관련\s*[:：]|교육근거\s*[:：]|근거\s*[:：])\s*(.+)$/);
+  if(inline){pushPart(inline[1],section);pushPart('관련: '+inline[3],'basis');return;}
+  // '전 직원... 관련: 법령'처럼 마침표가 없는 문장도 분리.
+  const embedded=v.match(/^(.*?\S)\s+(관련\s*[:：]|교육근거\s*[:：]|근거\s*[:：])\s*(.+)$/);
+  if(embedded){pushPart(embedded[1],section);pushPart('관련: '+embedded[3],'basis');return;}
+  if(/^(관련|교육근거|근거)\s*[:：]/.test(v)){v=v.replace(/^(관련|교육근거|근거)\s*[:：]\s*/,'');section='basis';}
+  else if(/^(?:「[^」]+」|[가-힣]+(?:법|조례|규칙|지침))\s*제\d+조/.test(v))section='basis';
+  if(section==='basis'){
+   v=v.replace(/^관련\s*[:：]\s*/,'').replace(/[.。]\s*$/,'').trim();
+   if(v)basis.push('관련: '+v);
+  }else{
+   v=v.replace(/[.。]\s*$/,'').trim();
+   if(v)target.push(v+'.');
+  }
+ }
+ for(const line of rawLines){
+  const clean=line.replace(/^[\s○◯•·*\-]+/,'').trim();
+  if(!clean)continue;
+  // 같은 줄에 '교육대상: ... 교육근거: ...'가 함께 있는 이전 데이터 처리
+  const split=clean.match(/^(.*?)(?:\s+)(교육근거|관련근거|근거)\s*[:：]\s*(.+)$/);
+  if(split){pushPart(split[1]);pushPart('관련: '+split[3],'basis');continue;}
+  pushPart(clean);
+ }
+ return {target:formatEducationLines(target.join('\n'),'notes'),basis:formatEducationLines(basis.join('\n'),'notes')};
+}
+function combineTargetBasis(target,basis){
+ const t=splitTargetBasis(String(target||'')).target;
+ const b=splitTargetBasis('교육근거: '+String(basis||'').replace(/^[○◯]\s*/gm,'').replace(/^관련\s*[:：]\s*/gm,'')).basis;
+ return [t&&'교육대상:\n'+t,b&&'교육근거:\n'+b].filter(Boolean).join('\n');
+}
+function formatEditorLists(){for(const [id,kind] of [['sites','site'],['courses','course'],['targetNotes','notes'],['basisNotes','notes']]){
+ let el=$(id);if(el)el.value=formatEducationLines(el.value,kind);
+}refreshCompletion();}
+function fillDocument(file){let issuer=issuerFromKnownDocument(file);if(issuer&&$('hostDept')&&!$('hostDept').value)$('hostDept').value=issuer;let d=suggestDocument(file);if(!d){if(!$('extractStatus').textContent)$('extractStatus').textContent='자동 인식되지 않은 문서입니다. 내용을 확인하고 직접 입력해 주세요.';return}for(let k of ['name','deadline','submit','field','courses','sites']){let el=$(k);if(el&&(!el.value||k==='name'))el.value=d[k]||''}if(d.notes){let parts=splitTargetBasis(d.notes);if($('targetNotes'))$('targetNotes').value=parts.target;if($('basisNotes'))$('basisNotes').value=parts.basis;}formatEditorLists();if(!$('extractStatus').textContent)$('extractStatus').textContent='기존 제공 공문의 결재·시행정보를 대조해 주관부서를 포함한 정보를 입력했습니다. 새 공문은 직접 확인하세요.'}
+
+function choicesFromText(raw,kind){let lines=String(raw||'').split(/\n/).map(x=>x.trim()).filter(Boolean);return lines.map(x=>x.replace(/^[○◯•·\-*]\s*/, '')).filter(x=>{if(/^(3개 중 택|연 \d+회|일반 직원:|보건소·|역학조사반원:)/.test(x))return false;return kind==='course'?!/^https?:/i.test(x):true}).map(x=>({label:x,value:x}));}
+function refreshCompletion(){let panel=$('completionPanel');if(!panel)return;let done=['이수완료','증빙제출'].includes($('status').value);panel.style.display=done?'grid':'none';if(!done)return;
+let course=$('completedCourse'),site=$('completedSite');let cOld=course.value||course.dataset.saved||'',sOld=site.value||site.dataset.saved||'';
+let c=choicesFromText($('courses').value,'course'),sites=choicesFromText($('sites').value,'site');
+function populate(el,items,old){el.innerHTML='<option value="">선택하세요</option>'+items.map(x=>'<option value="'+esc(x.value)+'">'+esc(x.label)+'</option>').join('')+'<option value="__other">직접 입력</option>';if(items.some(x=>x.value===old))el.value=old;else if(old){el.value='__other';let other=$(el.id+'Other');if(other)other.value=old;}}
+populate(course,c,cOld);populate(site,sites,sOld);toggleCompletionOther('completedCourse');toggleCompletionOther('completedSite');}
+function toggleCompletionOther(id){let e=$(id),o=$(id+'Other');if(o)o.style.display=e.value==='__other'?'block':'none';}
+function completedValue(id){let e=$(id);return e?.value==='__other'?($(id+'Other')?.value||''):e?.value||'';}
+
+function openEditor(id='',catalogId=''){editing=id||null;let c=CATALOG.find(x=>x.id===catalogId),r=db.records.find(x=>x.id===id)||{year:currentYear(),catalogId:c?.id||'',name:c?.name||'',field:'행정·법규',status:'미신청',deadline:'',submit:'',apply:'',actualHours:'',courses:'',sites:'',notes:'',files:[]};stagedFiles=[];let oldfiles=(r.files||[]).map(f=>`<span class="docitem">${esc(f.name)} <button onclick="previewStored('${esc(f.id)}')">미리보기</button> <button onclick="viewFile('${esc(f.id)}')">열기</button> <button onclick="removeFile('${esc(f.id)}')">삭제</button></span>`).join('');openDialog(r.id?'교육 수정':'교육등록',`<div class="note" style="margin-bottom:8px"><label style="display:inline-flex;align-items:center;gap:8px;font-weight:bold"><input type="checkbox" id="forceNew"> 신규 (중복 여부와 관계없이 별도 교육으로 등록)</label><span id="duplicateHint" style="margin-left:12px;color:#c71930;font-weight:800;font-size:calc(1em + 2pt);line-height:1.45;display:block;margin-top:5px"></span></div><div class="editor-layout"><div class="preview-pane"><div class="docbox" id="drop" ondragover="event.preventDefault()" ondrop="event.preventDefault();addFiles(event.dataTransfer.files)">교육등록; 관련 파일 드래그 앤 드롭 또는 <input type="file" multiple accept=".pdf,.hwpx,.docx,.txt,.png,.jpg" onchange="addFiles(this.files)"></div><div id="filelist" class="doclist">${oldfiles}</div><div id="docPreview" style="margin-top:8px"><div class="note">파일을 올리면 이곳에 미리보기가 표시됩니다.</div></div><p id="extractStatus" class="muted small"></p></div><div class="fields">${field('교육명','name',r.name)}${field('주관부서(공문 시행부서)','hostDept',r.hostDept||'')}<label>교육분야<select id="field">${['행정·법규','청렴·윤리','정보·디지털','재난·안전','복지·인권','직무전문','기타'].map(x=>`<option ${r.field===x?'selected':''}>${x}</option>`).join('')}</select></label><label>진행상태<select id="status" onchange="refreshCompletion()">${['미신청','신청완료','이수완료','증빙제출','대상아님'].map(x=>`<option ${r.status===x?'selected':''}>${x}</option>`).join('')}</select></label>${field('신청 마감일','apply',r.apply,'date')}${field('이수 마감일','deadline',r.deadline,'date')}${field('수료증 제출기한','submit',r.submit,'date')}<label class="wide">교육기관<textarea id="sites" rows="3" oninput="refreshCompletion()" onblur="formatEditorLists()">${esc(formatEducationLines(r.sites,'site'))}</textarea></label><label class="wide">수강과목·교육시간<textarea id="courses" rows="4" oninput="refreshCompletion()" onblur="formatEditorLists()">${esc(formatEducationLines(r.courses,'course'))}</textarea></label><label class="wide">교육대상<textarea id="targetNotes" rows="3" onblur="formatEditorLists()">${esc(splitTargetBasis(r.notes||(c?(c.basis+'\n'+c.target):'')).target)}</textarea></label><label class="wide">교육근거<textarea id="basisNotes" rows="3" onblur="formatEditorLists()">${esc(splitTargetBasis(r.notes||(c?(c.basis+'\n'+c.target):'')).basis)}</textarea></label><section id="completionPanel" class="completion" style="display:none"><h3>✓ 이수완료 상세 기록</h3><label>실제 이수시간 (시간)<input id="actualHours" type="number" min="0" step="0.5" inputmode="decimal" value="${esc(r.actualHours === '' || r.actualHours == null ? 1 : r.actualHours)}" required></label><label>실제 수강 과목<select id="completedCourse" onchange="toggleCompletionOther('completedCourse')"></select><input id="completedCourseOther" placeholder="수강 과목 직접 입력" style="display:none"></label><label>실제 수강 기관·사이트<select id="completedSite" onchange="toggleCompletionOther('completedSite')"></select><input id="completedSiteOther" placeholder="수강 기관 또는 URL 직접 입력" style="display:none"></label><div class="wide muted small">교육을 이수완료로 변경하면 실제 수강한 과목과 기관을 선택하여 저장합니다.</div></section></div></div><div class="note small">공문이 기준교육과 일치하면 기존 회색 교육행에 연결합니다. 이수기한이 없으면 제출기한을 적용합니다. 파일은 데이터 백업에 포함됩니다.</div>`,'editor');$('dialog').dataset.catalog=catalogId||r.catalogId||'';$('dialog').dataset.id=id||'';$('completedCourse').dataset.saved=r.completedCourse||'';$('completedSite').dataset.saved=r.completedSite||'';refreshCompletion();if(r.files?.length)previewStored(r.files[0].id)}
+function previewStored(id){let f=db.files[id];if(!f)return;fetch(f.data).then(x=>x.blob()).then(b=>showPreview(new File([b],f.name,{type:b.type||'application/octet-stream'}))).catch(()=>alert('첨부파일을 읽지 못했습니다.'))}
+const VERIFIED_PDF_ISSUERS={"9aa733b56eac547664d14b6debfa3b05d6d197c920199e98d13b7e2ef37ac147": "질병관리과", "03073e2d3728ba6b418c27e33ce9c952e42de29a2bcb55c503d3719a5d6afbf7": "복지급여과", "bb4f14851db35f889172a06f06b6cccf2ac0c33637eeed7821212a945d470f7b": "사회복지과", "3d96bde7d818f8abaf2d455d3cd024d97d0c4ae6f71accbed29a44664ae67f9c": "가족아동과", "03956c668788ce1e114fd727bc8271cfa005208b27ae0638ccda4fa17abf8e81": "총무과"};
+
+async function extractIssuingDepartment(file){
+ // Priority 1: exact document fingerprint verified against its PDF footer.
+ try{if(window.crypto?.subtle){const hash=await crypto.subtle.digest('SHA-256',await file.arrayBuffer());const hex=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');if(VERIFIED_PDF_ISSUERS[hex])return {department:VERIFIED_PDF_ISSUERS[hex],source:'검증된 공문 시행정보'};}}catch(e){}
+ // Priority 2: extract text from selectable PDF text or TXT where available.
+ // PDF without a text layer / encoded streams requires a full PDF parser and is left unverified.
+ try{
+  let text='';if(/\.txt$/i.test(file.name))text=await file.text();
+  else if(/\.pdf$/i.test(file.name)){
+   const bytes=new Uint8Array(await file.arrayBuffer());let raw=new TextDecoder('latin1').decode(bytes);
+   const chunks=[raw];const pattern=/<<(?:[^>]|>(?!>))*\/Filter\s*\/FlateDecode(?:[^>]|>(?!>))*>>\s*stream\r?\n/g;
+   if(typeof DecompressionStream!=='undefined'){
+    let m,n=0;while((m=pattern.exec(raw))&&n++<60){let start=pattern.lastIndex,end=raw.indexOf('endstream',start);if(end<0)break;let data=bytes.slice(start,end);while(data.length&&[10,13].includes(data[data.length-1]))data=data.slice(0,-1);
+    try{const stream=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate'));chunks.push(await new Response(stream).text())}catch(e){}
+    }
+   }
+   text=chunks.join('\n');
+  }
+  const match=text.match(/시\s*행\s+([가-힣A-Za-z0-9· ]{2,35}?)\s*[-–]\s*\d{2,}/);
+  if(match)return {department:match[1].trim(),source:'문서 시행번호'};
+ }catch(e){}
+ return null;
+}
+async function autoFillIssuingDepartment(file){
+ const found=await extractIssuingDepartment(file);const el=$('hostDept');
+ if(!el)return;
+ if(found){if(!el.value||el.dataset.autofilled==='true'){el.value=found.department;el.dataset.autofilled='true'}
+  $('extractStatus').textContent=`시행부서 확인: ${found.department} (${found.source}). 결재란과 대조해 주세요.`;
+ }else if(!el.value){$('extractStatus').textContent='시행부서를 자동 확인하지 못했습니다. 공문 마지막 페이지의 「시행 ○○과-번호」를 확인해 입력하세요.';}
+}
+
+function addFiles(files){let added=[];for(let f of files){if(stagedFiles.some(x=>x.name===f.name&&x.size===f.size)){alert('같은 파일을 이미 선택했습니다.');continue}stagedFiles.push(f);added.push(f)}let el=$('filelist');el.innerHTML+=added.map(f=>`<span class="docitem">${esc(f.name)} (${Math.ceil(f.size/1024)}KB)</span>`).join('');if(added.length){showPreview(added[added.length-1]);if(!$('dialog').dataset.id)fillDocument(added[0]);autoFillIssuingDepartment(added[0]);let hits=findSimilar($('name').value,$('dialog').dataset.id,stagedFiles);$('duplicateHint').textContent=hits.length?'중복등록 의심: '+hits.map(x=>x.name+'_'+(x.record.submit||x.record.deadline||'제출일 미입력')).join(', '):'중복 교육명 없음';}}
+function removeFile(id){if(!confirm('이 첨부파일을 삭제합니까?'))return;delete db.files[id];for(let r of db.records)r.files=(r.files||[]).filter(f=>f.id!==id);persist();openEditor($('dialog').dataset.id,$('dialog').dataset.catalog)}
+function viewFile(id){let f=db.files[id];if(!f)return alert('파일을 찾을 수 없습니다.');let w=window.open('','_blank');if(!w)return alert('팝업 차단을 해제하세요.');w.location.href=f.data}
+function fileToData(f){return new Promise((resolve,reject)=>{let reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(f)})}
+async function saveDialog(){if(mode==='settings'){for(let k of ['org','department','grade','job','profileDate'])db.profile[k]=$(k).value;persist();closeDialog();init();return}
+if(mode!=='editor')return;
+let forced=$('forceNew')?.checked===true;
+let id=(!forced&&$('dialog').dataset.id)||'E'+Date.now()+Math.random().toString(36).slice(2,6);
+let prior=db.records.find(x=>x.id===id);
+let r=prior||{id,year:currentYear(),files:[]};
+formatEditorLists();for(let k of ['name','field','status','apply','deadline','submit','courses','sites','hostDept'])r[k]=$(k).value;r.notes=combineTargetBasis($('targetNotes').value,$('basisNotes').value);const isDone=['이수완료','증빙제출'].includes(r.status);if(isDone){const h=$('actualHours').value.trim();if(h===''||!Number.isFinite(Number(h))||Number(h)<0)return alert('실제 이수시간을 0 이상의 숫자로 입력하세요.');r.actualHours=Number(h)}
+if(!r.name.trim())return alert('교육명을 입력하세요');
+r.completedCourse=completedValue('completedCourse');r.completedSite=completedValue('completedSite');r.catalogId='';if(!r.deadline)r.deadline=r.submit;
+let duplicates=findSimilar(r.name,id,stagedFiles);
+if(!forced&&duplicates.length){let lines=duplicates.slice(0,4).map(x=>'• '+x.name+' ('+x.reason+')').join('\n');if(!confirm('기존 등록된 교육·공문과 중복 가능성이 있습니다.\n'+lines+'\n\n확인을 누르면 기존 교육에 첨부합니다. 취소하면 저장하지 않습니다. 별도 등록은 「신규」를 체크하세요.'))return;
+let target=duplicates[0].record;
+if(target&&target.id!==id){r=target;for(let k of ['field','status','apply','deadline','submit','courses','sites','hostDept'])if($(k).value)r[k]=$(k).value;r.notes=combineTargetBasis($('targetNotes').value,$('basisNotes').value);r.completedCourse=completedValue('completedCourse');r.completedSite=completedValue('completedSite');if(isDone)r.actualHours=Number($('actualHours').value);}
+}
+for(let f of stagedFiles){let identical=Object.values(db.files).find(x=>x.name===f.name&&x.size===f.size);if(identical&&!forced&&!confirm('동일한 문서가 존재합니다: '+f.name+'\n이 파일도 첨부하시겠습니까?'))continue;
+let fid='F'+Date.now()+Math.random().toString(36).slice(2);db.files[fid]={name:f.name,size:f.size,data:await fileToData(f)};r.files.push({id:fid,name:f.name});}
+if(!db.records.some(x=>x.id===r.id))db.records.push(r);
+if(persist()){closeDialog();init()}}
+function normalizeTitle(s){return String(s||'').toLowerCase().replace(/20\d{2}년?(도)?/g,'').replace(/공공부문|전직원|의무|사이버|온라인|교육|수료|협조|재안내|알림|실시|계획|관련|통합/g,'').replace(/[^가-힣a-z0-9]/g,'')}
+function findSimilar(name,exclude,files=[]){let n=normalizeTitle(name);return db.records.filter(r=>r.id!==exclude).map(r=>{let q=normalizeTitle(r.name),sameFile=files.some(f=>(r.files||[]).some(x=>x.name===f.name)),similar=n&&q&&(n===q||(n.length>=3&&q.length>=3&&(n.includes(q)||q.includes(n))));return sameFile||similar?{record:r,name:r.name,reason:sameFile?'동일 파일명':'유사 교육명'}:null}).filter(Boolean)}
+
+function removeAllEducation(){
+ const y=currentYear(),count=db.records.filter(r=>+r.year===y).length;
+ if(!count)return alert('삭제할 교육이 없습니다.');
+ if(!confirm(`${y}년 등록 교육 ${count}건과 연결된 공문·수료증을 모두 삭제합니다. 계속하시겠습니까?`))return;
+ const answer=prompt('삭제를 확인하려면 전체삭제를 입력하세요.');if(answer!=='전체삭제')return;
+ db.records=db.records.filter(r=>+r.year!==y);
+ const used=new Set(db.records.flatMap(r=>[...(r.files||[]),...(r.certificateFiles||[])].map(f=>f.id)));
+ for(const id of Object.keys(db.files))if(!used.has(id))delete db.files[id];
+ persist();render();
+}
+function removeSelected(){let ids=[...document.querySelectorAll('.pick:checked')].map(x=>x.value).filter(Boolean);if(!ids.length)return alert('삭제할 등록 교육을 선택하세요.');if(!confirm(`${ids.length}개 교육과 첨부문서를 삭제할까요? 이 작업은 복구할 수 없습니다.`))return;db.records=db.records.filter(r=>!ids.includes(r.id));let used=new Set(db.records.flatMap(r=>[...(r.files||[]),...(r.certificateFiles||[])].map(f=>f.id)));for(let id of Object.keys(db.files))if(!used.has(id))delete db.files[id];persist();render()}
+function download(name,text,type='application/json'){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([text],{type}));a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+function exportBackup(){download('교육ON_전체백업_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({format:'education-on-v6',created:new Date().toISOString(),data:db}))}
+async function importBackup(input){let f=input.files[0];if(!f)return;try{let v=JSON.parse(await f.text()),d=v.data||v;if(!Array.isArray(d.records)||!d.profile)throw Error('올바른 백업 구조가 아닙니다');if(!confirm('현재 데이터를 백업파일로 교체할까요? 먼저 현재 데이터를 백업하세요.'))return;db={profile:d.profile,records:d.records,files:d.files||{},years:d.years||{}};persist();init();alert('복원 완료')}catch(e){alert('복원 실패: '+e.message)}finally{input.value=''}}
+init();
+
+function updateStatusFilter(value){selectedStatus=['전체','미이수','이수완료'].includes(value)?value:'전체';render()}
+</script></body></html>
